@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>فرم نمایش نمره دانشجویی</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 450px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px 30px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #4a5568;
+            margin-bottom: 10px;
+            position: relative;
+        }
+        h2::after {
+            content: '';
+            display: block;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+        p {
+            font-size: 16px;
+            color: #718096;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 50px;
+            font-size: 16px;
+            font-family: 'Vazirmatn', sans-serif;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            color: #4a5568;
+        }
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #667eea;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        .input-group i {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #a0aec0;
+            font-size: 18px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: 'Vazirmatn', sans-serif;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        button:hover::before {
+            left: 100%;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        #result {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: 600;
+            min-height: 20px;
+            transition: all 0.3s ease;
+        }
+        .error {
+            background: linear-gradient(135deg, #fed7d7, #feb2b2);
+            color: #c53030;
+            border: 1px solid #fc8181;
+            animation: shake 0.5s ease-in-out;
+        }
+        .success {
+            background: linear-gradient(135deg, #c6f6d5, #9ae6b4);
+            color: #38a169;
+            border: 1px solid #68d391;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @media (max-width: 480px) {
+            .container {
+                padding: 30px 20px;
+                margin: 10px;
+            }
+            h2 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2><i class="fas fa-graduation-cap"></i> نمره دانشجویی</h2>
+        <p>سه رقم آخر شماره دانشجویی را وارد کنید:</p>
+        <div class="input-group">
+            <i class="fas fa-id-card"></i>
+            <input type="text" id="studentId" placeholder="مثال: 321" maxlength="10">
+        </div>
+        <button onclick="showGrade()">
+            <i class="fas fa-search"></i> نمایش نمره
+        </button>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        // یک دیکشنری فرضی از شماره دانشجویی و نمرات (می‌توانید این را با داده‌های واقعی جایگزین کنید)
+        const grades = {
+            '418': '0.06',
+            '555': '0.73',
+            '333': '1.00',
+            // اضافه کردن شماره‌های بیشتر...
+        };
+
+        function showGrade() {
+            const studentId = document.getElementById('studentId').value.trim();
+            const resultDiv = document.getElementById('result');
+
+            if (!studentId) {
+                resultDiv.innerHTML = '<i class="fas fa-exclamation-triangle"></i> لطفاً شماره دانشجویی را وارد کنید!';
+                resultDiv.className = 'error';
+                return;
+            }
+
+            if (grades[studentId]) {
+                resultDiv.innerHTML = `<i class="fas fa-star"></i> نمره شما: ${grades[studentId]}/1.00`;
+                resultDiv.className = 'success';
+            } else {
+                resultDiv.innerHTML = '<i class="fas fa-question-circle"></i> شماره دانشجویی یافت نشد! لطفاً دوباره چک کنید.';
+                resultDiv.className = 'error';
+            }
+        }
+
+        // نمایش نمره با Enter
+        document.getElementById('studentId').addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                showGrade();
+            }
+        });
+
+        // فوکوس اولیه روی input
+        document.getElementById('studentId').focus();
+    </script>
+</body>
+</html>
